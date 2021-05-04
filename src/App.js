@@ -8,12 +8,16 @@ import Filter from "./components/Filter";
 import Sort from "./components/Sort";
 
 class App extends Component {
-  state = {
-    employees: [{}],
-    filteredEmployees: [{}],
-    filter: false,
-    sort: false
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      employees: [{}],
+      filteredEmployees: [{}],
+      filter: false,
+      sortedEmployees: [{}],
+      sort: false
+    }
+  }
 
   // When component mounts, get 50 users
   componentDidMount() {
@@ -39,28 +43,14 @@ class App extends Component {
         .catch(err => console.log(err));
   };
 
-  handleFilter = name => {
-    const employees = this.state.employees.filter(employee => employee.name !== name);
-    this.setState({ employees });
-  };
+  // handleFilter = name => {
+  //   const employeeFilter = this.state.employees.filter(employee => employee.name !== name);
+  //   this.setState({ 
+  //     filteredEmployees: employeeFilter,
+  //     filter: true 
+  //   });
+  // };
   
-  renderEmployees() {
-    if (this.state.filter === false) {
-      this.state.employees.length ? (
-        this.state.employees.map(employee => (
-          <TableRow //key={employee.id}
-            name={employee.name}
-            id={employee.id}
-            email={employee.email}
-            phone={employee.phone}
-          />
-        ))
-      ) : (
-        <h4>No Results</h4>
-      )
-    }
-  }
-
   render() {
     return (
       <div>
@@ -72,31 +62,23 @@ class App extends Component {
           </Row>
           <Row>
             <Col size="md-4 offset-md-5">
-              <Filter
-                value={this.state.search}
-                handleInputChange={this.handleInputChange}
-                //handleFormSubmit={this.handleFormSubmit}
-                handleFilter={this.handleFilter}
-              />
+              <Filter/>
             </Col>
             <Col size="md-3">
-              <Sort />
+              <Sort/>
             </Col>
           </Row>
           <Row>
             <Col size="md-12">
-              <Table>{this.state.employees.length ? (
-                this.state.employees.map(employee => (
+              <Table> 
+                {this.state.employees.map(employee => (
                   <TableRow //key={employee.id}
                     name={employee.name}
                     id={employee.id}
                     email={employee.email}
                     phone={employee.phone}
                   />
-                ))
-                ) : (
-                  <h4>No Results</h4>
-                )}
+                ))}
               </Table>  
             </Col>
           </Row>
