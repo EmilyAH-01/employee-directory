@@ -4,8 +4,8 @@ import Row from "./components/Row";
 import Col from "./components/Col";
 import { Table, TableRow } from "./components/Table";
 import API from "./utils/API";
-import Filter from "./components/Filter";
-import Sort from "./components/Sort";
+//import Filter from "./components/Filter";
+//import Sort from "./components/Sort";
 
 class App extends Component {
   constructor(props) {
@@ -21,7 +21,7 @@ class App extends Component {
 
   // When component mounts, get 50 users
   componentDidMount() {
-    this.getEmployees("50");
+    this.getEmployees("500");
   }
 
   // Prevents the need for a nested map function to display nested objects 
@@ -35,21 +35,22 @@ class App extends Component {
 
   getEmployees = number => {
     API.getFromAPI(number)
-        .then(res => {
-            this.setState({ 
-              employees: this.reformatApiResults(res.data.results) 
-            })
-        })
-        .catch(err => console.log(err));
+      .then(res => {
+          this.setState({ 
+            employees: this.reformatApiResults(res.data.results) 
+          })
+      })
+      .catch(err => console.log(err));
   };
 
-  // handleFilter = name => {
-  //   const employeeFilter = this.state.employees.filter(employee => employee.name !== name);
-  //   this.setState({ 
-  //     filteredEmployees: employeeFilter,
-  //     filter: true 
-  //   });
-  // };
+  handleFilter = nameEntry => {
+    const employeeFilter = this.state.employees.filter(employee => employee.name === nameEntry);
+    this.setState({ 
+      //filteredEmployees: employeeFilter,
+      employees: employeeFilter,
+      filter: true
+    });
+  };
   
   render() {
     return (
@@ -62,17 +63,22 @@ class App extends Component {
           </Row>
           <Row>
             <Col size="md-4 offset-md-5">
-              <Filter/>
+              <div className="input-group mb-3">
+                  <input id="search" type="text" className="form-control" placeholder="Filter by Full Name" aria-label="Employee name to filter by" aria-describedby="button-addon2" />
+                  <button className="btn btn-outline-secondary" type="button" id="button-addon2" 
+                    onClick={() => this.handleFilter(document.getElementById("search").value)}
+                  >Filter</button>
+              </div>
             </Col>
             <Col size="md-3">
-              <Sort/>
+              <button className="btn btn primary">Sort</button>
             </Col>
           </Row>
           <Row>
             <Col size="md-12">
               <Table> 
                 {this.state.employees.map(employee => (
-                  <TableRow //key={employee.id}
+                  <TableRow key={employee.id}
                     name={employee.name}
                     id={employee.id}
                     email={employee.email}
