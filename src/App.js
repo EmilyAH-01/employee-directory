@@ -44,13 +44,23 @@ class App extends Component {
   };
 
   handleFilter = nameEntry => {
-    const employeeFilter = this.state.employees.filter(employee => employee.name === nameEntry);
-    this.setState({ 
-      //filteredEmployees: employeeFilter,
-      employees: employeeFilter,
-      filter: true
-    });
+    if (nameEntry) {
+      const employeeFilter = this.state.employees.filter(employee => employee.name === nameEntry);
+      this.setState({ 
+        filteredEmployees: employeeFilter,
+        //employees: employeeFilter,
+        filter: true
+      });
+    } else {
+      this.setState({
+        filter: false
+      });
+    }
   };
+
+  handleSort = column => {
+
+  }
   
   render() {
     return (
@@ -68,23 +78,50 @@ class App extends Component {
                   <button className="btn btn-outline-secondary" type="button" id="button-addon2" 
                     onClick={() => this.handleFilter(document.getElementById("search").value)}
                   >Filter</button>
+                  <button className="btn btn-outline-secondary" type="button" id="button-clear" 
+                    onClick={() => this.setState({ filter: false })}
+                  >Clear Filter</button>
               </div>
             </Col>
             <Col size="md-3">
-              <button className="btn btn primary">Sort</button>
+              <div className="input-group">
+                <select 
+                  className="form-select" 
+                  id="inputGroupSelect04" 
+                  aria-label="Select with button addon">
+                    <option selected>Choose Column</option>
+                    <option value="1">Name</option>
+                    <option value="2">Id</option>
+                    <option value="3">Email</option>
+                    <option value="4">Phone Number</option>
+                </select>
+                <button 
+                  className="btn btn-outline-secondary" type="button" 
+
+                >Sort</button>
+              </div>
             </Col>
           </Row>
           <Row>
             <Col size="md-12">
-              <Table> 
-                {this.state.employees.map(employee => (
-                  <TableRow key={employee.id}
-                    name={employee.name}
-                    id={employee.id}
-                    email={employee.email}
-                    phone={employee.phone}
-                  />
-                ))}
+              <Table>
+                {this.state.filter ?  
+                  (this.state.filteredEmployees.map(employee => (
+                    <TableRow key={employee.id}
+                      name={employee.name}
+                      id={employee.id}
+                      email={employee.email}
+                      phone={employee.phone}
+                    />
+                  ))) : 
+                  (this.state.employees.map(employee => (
+                    <TableRow key={employee.id}
+                      name={employee.name}
+                      id={employee.id}
+                      email={employee.email}
+                      phone={employee.phone}
+                    />
+                  ))) }
               </Table>  
             </Col>
           </Row>
