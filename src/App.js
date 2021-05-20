@@ -4,8 +4,6 @@ import Row from "./components/Row";
 import Col from "./components/Col";
 import { Table, TableRow } from "./components/Table";
 import API from "./utils/API";
-//import Filter from "./components/Filter";
-//import Sort from "./components/Sort";
 
 class App extends Component {
   constructor(props) {
@@ -13,8 +11,8 @@ class App extends Component {
     this.state = {
       employees: [{}],
       filteredEmployees: [{}],
+      sortColumn: "",
       filter: false,
-      sortedEmployees: [{}],
       sort: false
     }
   }
@@ -58,9 +56,39 @@ class App extends Component {
     }
   };
 
-  handleSort = column => {
-
-  }
+  handleSort = event => {
+    if (this.state.sort === false) {
+      this.setState({sortColumn: event.target.value, sort: true});
+      let col = this.state.sortColumn;
+      let sortedEmployees = [...this.state.employees];
+      
+      if (col === "name") {
+          sortedEmployees.sort((a, b) => {
+            if (a.name < b.name) { return -1; }
+            if (a.name > b.name) { return 1; }
+            return 0;
+          });
+          this.setState({ employees: sortedEmployees });
+      // } else if (col === "id") {
+      //     sortedEmployees.sort((a, b) => {
+      //       let newA = a.id.replace(/-/g,"");
+      //       let newB = b.id.replace(/-/g,"");
+      //       console.log(newA);
+      //       if (newA < newB) { return -1; }
+      //       if (newA > newB) { return 1; }
+      //       return 0;
+      //     });
+      //     this.setState({ employees: sortedEmployees });
+      } else {
+        sortedEmployees.sort((a, b) => {
+          if (a.email < b.email) { return -1; }
+          if (a.email > b.email) { return 1; }
+          return 0;
+        });
+        this.setState({ employees: sortedEmployees });
+      }
+    }
+  };
   
   render() {
     return (
@@ -87,18 +115,17 @@ class App extends Component {
               <div className="input-group">
                 <select 
                   className="form-select" 
-                  id="inputGroupSelect04" 
-                  aria-label="Select with button addon">
-                    <option selected>Choose Column</option>
-                    <option value="1">Name</option>
-                    <option value="2">Id</option>
-                    <option value="3">Email</option>
-                    <option value="4">Phone Number</option>
+                  id="sort-options" 
+                  aria-label="Select with button addon"
+                  value={this.state.sortColumn}
+                  onChange={this.handleSort}>
+                    <option selected>Sort by Column</option>
+                    <option value="name">Name</option>
+                    <option value="email">Email</option>
                 </select>
-                <button 
-                  className="btn btn-outline-secondary" type="button" 
-
-                >Sort</button>
+                {/* <button 
+                  className="btn btn-outline-secondary" type="button"
+                >Sort</button> */}
               </div>
             </Col>
           </Row>
